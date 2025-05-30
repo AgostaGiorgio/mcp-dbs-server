@@ -1,15 +1,15 @@
 package com.mcp.dbs;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.ai.support.ToolCallbacks;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import com.mcp.dbs.service.Neo4jTools;
+import com.mcp.dbs.service.DBTool;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -20,7 +20,9 @@ public class DbsApplication {
 	}
 
 	@Bean
-	public List<ToolCallback> myTools(Neo4jTools neo4jTools) {
-		return List.of(ToolCallbacks.from(neo4jTools));
+	public List<ToolCallback> dbTools(List<DBTool> tools) {
+		return tools.stream()
+				.flatMap(tool -> tool.getTools().stream())
+				.collect(Collectors.toList());
 	}
 }
