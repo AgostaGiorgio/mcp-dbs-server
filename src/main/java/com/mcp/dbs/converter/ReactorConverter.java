@@ -21,6 +21,7 @@ public class ReactorConverter implements ToolCallResultConverter {
     }
 
     @Override
+    @SuppressWarnings("null")
     public String convert(Object result, Type returnType) {
 
         if (isResultMono(returnType)) {

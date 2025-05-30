@@ -1,0 +1,9 @@
+
+spring:
+  ai:
+    mcp:
+      server:
+        name: mcp-dbs-server
+        version: 1.0.0
+        type: ASYNC
+        request-timeout: 60s

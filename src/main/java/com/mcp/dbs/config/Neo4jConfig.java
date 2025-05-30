@@ -12,8 +12,9 @@ import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
 import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionManager;
 import org.springframework.transaction.ReactiveTransactionManager;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,16 @@ public class Neo4jConfig {
 
     @Value("${spring.data.neo4j.database:neo4j}")
     private String database;
+
+
+    @Getter
+    @Value("${neo4j.read.enabled:true}")
+    private boolean readMode;
+
+    @Getter
+    @Value("${neo4j.write.enabled:false}")
+    private boolean writeMode;
+
 
     @Bean
     public ReactiveTransactionManager reactiveTransactionManager(
