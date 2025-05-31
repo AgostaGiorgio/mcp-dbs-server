@@ -1,4 +1,4 @@
-package com.mcp.dbs.pojo;
+package com.mcp.dbs.neo4j.pojo;
 
 import java.util.List;
 

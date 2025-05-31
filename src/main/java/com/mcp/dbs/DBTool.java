@@ -1,4 +1,4 @@
-package com.mcp.dbs.service;
+package com.mcp.dbs;
 
 import java.util.List;
 

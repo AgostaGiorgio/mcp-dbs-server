@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import com.mcp.dbs.service.DBTool;
-
 @SpringBootApplication
 @EnableConfigurationProperties
 public class DbsApplication {

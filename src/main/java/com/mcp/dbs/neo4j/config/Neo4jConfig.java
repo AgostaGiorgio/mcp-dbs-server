@@ -1,4 +1,4 @@
-package com.mcp.dbs.config;
+package com.mcp.dbs.neo4j.config;
 
 import org.neo4j.driver.Driver;
 import org.springframework.beans.factory.annotation.Value;

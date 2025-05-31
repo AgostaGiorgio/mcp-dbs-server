@@ -1,4 +1,4 @@
-package com.mcp.dbs.service;
+package com.mcp.dbs.neo4j.service;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,10 +13,10 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
 import org.springframework.stereotype.Service;
 
-import com.mcp.dbs.config.Neo4jConfig;
+import com.mcp.dbs.DBTool;
 import com.mcp.dbs.converter.ReactorConverter;
-import com.mcp.dbs.pojo.Neo4jSchema;
-import com.mcp.dbs.utils.Neo4jConstants;
+import com.mcp.dbs.neo4j.config.Neo4jConfig;
+import com.mcp.dbs.neo4j.pojo.Neo4jSchema;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

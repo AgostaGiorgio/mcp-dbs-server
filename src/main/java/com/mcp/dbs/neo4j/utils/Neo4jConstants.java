@@ -1,4 +1,4 @@
-package com.mcp.dbs.utils;
+package com.mcp.dbs.neo4j.utils;
 
 import java.util.List;
 
