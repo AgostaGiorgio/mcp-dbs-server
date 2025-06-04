@@ -27,8 +27,11 @@ extra["springAiVersion"] = "1.0.0"
 
 dependencies {
 	implementation("org.springframework.boot", "spring-boot-starter-webflux")
+	implementation("org.springframework.boot", "spring-boot-starter-actuator")
 	implementation("org.springframework.ai", "spring-ai-starter-mcp-server-webflux")
 	
+	implementation("org.springframework.boot", "spring-boot-starter-data-neo4j")
+
 	compileOnly("org.projectlombok", "lombok")
 	
 	annotationProcessor("org.projectlombok", "lombok")
@@ -45,4 +48,8 @@ dependencyManagement {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.bootRun {
+    args("--spring.profiles.active=local")
 }

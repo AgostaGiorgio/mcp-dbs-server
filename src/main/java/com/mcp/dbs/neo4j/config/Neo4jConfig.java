@@ -1,0 +1,70 @@
+package com.mcp.dbs.neo4j.config;
+
+import org.neo4j.driver.Driver;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.neo4j.core.ReactiveDatabaseSelectionProvider;
+import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
+import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionManager;
+import org.springframework.transaction.ReactiveTransactionManager;
+
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Setter
+@Configuration
+@RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.neo4j.uri")
+public class Neo4jConfig {
+
+    @NonNull
+    private final Driver driver;
+
+    @NonNull
+    private final ConfigurableApplicationContext ctx; 
+    
+    @NonNull
+    private final ReactiveNeo4jClient client;
+
+    @Value("${spring.data.neo4j.database:neo4j}")
+    private String database;
+
+
+    @Getter
+    @Value("${neo4j.read.enabled:true}")
+    private boolean readMode;
+
+    @Getter
+    @Value("${neo4j.write.enabled:false}")
+    private boolean writeMode;
+
+
+    @Bean
+    public ReactiveTransactionManager reactiveTransactionManager(
+            ReactiveDatabaseSelectionProvider databaseSelectionProvider) {
+        return new ReactiveNeo4jTransactionManager(driver, databaseSelectionProvider);
+    }
+
+    @PostConstruct
+    private void init() {
+        client.query("RETURN 1")
+                .fetch()
+                .one()
+                .doOnError(e -> {
+                    log.error("Error connecting to Neo4j database: {}", database, e);
+                    System.exit(SpringApplication.exit(ctx));
+                })
+                .doOnSuccess(i -> log.info("Successfully connected to Neo4j database: {}", database))
+                .block();
+    }
+
+}
