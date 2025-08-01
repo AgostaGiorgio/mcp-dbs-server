@@ -13,7 +13,6 @@ import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionM
 import org.springframework.transaction.ReactiveTransactionManager;
 
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -39,15 +38,6 @@ public class Neo4jConfig {
     private String database;
 
 
-    @Getter
-    @Value("${neo4j.read.enabled:true}")
-    private boolean readMode;
-
-    @Getter
-    @Value("${neo4j.write.enabled:false}")
-    private boolean writeMode;
-
-
     @Bean
     public ReactiveTransactionManager reactiveTransactionManager(
             ReactiveDatabaseSelectionProvider databaseSelectionProvider) {
@@ -60,10 +50,10 @@ public class Neo4jConfig {
                 .fetch()
                 .one()
                 .doOnError(e -> {
-                    log.error("Error connecting to Neo4j database: {}", database, e);
+                    log.error("❌ Error connecting to Neo4j database: {}", database, e);
                     System.exit(SpringApplication.exit(ctx));
                 })
-                .doOnSuccess(i -> log.info("Successfully connected to Neo4j database: {}", database))
+                .doOnSuccess(i -> log.info("✅ Successfully connected to Neo4j database: {}", database))
                 .block();
     }
 

@@ -31,6 +31,10 @@ dependencies {
 	implementation("org.springframework.ai", "spring-ai-starter-mcp-server-webflux")
 	
 	implementation("org.springframework.boot", "spring-boot-starter-data-neo4j")
+	implementation("org.springframework.boot", "spring-boot-starter-data-r2dbc")
+	implementation("io.r2dbc", "r2dbc-postgresql", "0.8.13.RELEASE")
+	implementation("io.asyncer", "r2dbc-mysql", "1.4.0")
+	implementation("org.mariadb", "r2dbc-mariadb", "1.3.0")
 
 	compileOnly("org.projectlombok", "lombok")
 	
