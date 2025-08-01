@@ -1,4 +1,4 @@
 
-neo4j:
+client:
   write.enabled: true
   read.enabled: true

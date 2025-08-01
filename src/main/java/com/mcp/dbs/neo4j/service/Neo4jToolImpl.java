@@ -10,12 +10,13 @@ import org.springframework.ai.support.ToolCallbacks;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.neo4j.core.ReactiveNeo4jClient;
 import org.springframework.stereotype.Service;
 
 import com.mcp.dbs.DBTool;
 import com.mcp.dbs.converter.ReactorConverter;
-import com.mcp.dbs.neo4j.config.Neo4jConfig;
+import com.mcp.dbs.config.ClientConfig;
 import com.mcp.dbs.neo4j.pojo.Neo4jSchema;
 
 import lombok.NonNull;
@@ -27,13 +28,14 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.neo4j.uri")
 public class Neo4jToolImpl implements DBTool {
 
     @NonNull
     private final ReactiveNeo4jClient client;
 
     @NonNull
-    private final Neo4jConfig neo4jConfig;
+    private final ClientConfig clientConfig;
 
     @Override
     public List<ToolCallback> getTools() {
@@ -41,12 +43,12 @@ public class Neo4jToolImpl implements DBTool {
         List<ToolCallback> tools = Arrays.stream(ToolCallbacks.from(this))
                 .collect(Collectors.toList());
 
-        if (!neo4jConfig.isReadMode()) {
+        if (!clientConfig.isReadMode()) {
             log.debug("Read mode is disabled, filtering out read tools");
             tools.removeIf(tool -> tool.getToolDefinition().name().equalsIgnoreCase("Execute Neo4j read query"));
         }
 
-        if (!neo4jConfig.isWriteMode()) {
+        if (!clientConfig.isWriteMode()) {
             log.debug("Write mode is disabled, filtering out write tools");
             tools.removeIf(tool -> tool.getToolDefinition().name().equalsIgnoreCase("Execute Neo4j write query"));
         }
@@ -68,7 +70,7 @@ public class Neo4jToolImpl implements DBTool {
     private Flux<Map<String, Object>> execReadQuery(
             @ToolParam(description = "The Cypher query to execute") String query) {
         log.info("Executing read query: {}", query);
-        if (!neo4jConfig.isReadMode()) {
+        if (!clientConfig.isReadMode()) {
             throw new IllegalStateException("Read mode is not enabled in the configuration.");
         }
         if (isWriteQuery(query)) {
@@ -84,10 +86,10 @@ public class Neo4jToolImpl implements DBTool {
     private Flux<Map<String, Object>> execWriteQuery(
             @ToolParam(description = "The Cypher query to execute") String query) {
         log.info("Executing write query: {}", query);
-        if (!neo4jConfig.isWriteMode()) {
+        if (!clientConfig.isWriteMode()) {
             throw new IllegalStateException("Write mode is not enabled in the configuration.");
         }
-        if (isReadQuery(query) && !neo4jConfig.isReadMode()) {
+        if (isReadQuery(query) && !clientConfig.isReadMode()) {
             throw new IllegalStateException("Read mode is not enabled in the configuration.");
         }
         return client.query(query)
